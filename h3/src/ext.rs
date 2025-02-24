@@ -13,6 +13,8 @@ impl Protocol {
     pub const WEB_TRANSPORT: Protocol = Protocol(ProtocolInner::WebTransport);
     /// RFC 9298 protocol
     pub const CONNECT_UDP: Protocol = Protocol(ProtocolInner::ConnectUdp);
+    /// Anapaya connect-snap protocol (not yet standardized)
+    pub const CONNECT_SNAP: Protocol = Protocol(ProtocolInner::ConnectSnap);
 
     /// Return a &str representation of the `:protocol` pseudo-header value
     #[inline]
@@ -20,6 +22,7 @@ impl Protocol {
         match self.0 {
             ProtocolInner::WebTransport => "webtransport",
             ProtocolInner::ConnectUdp => "connect-udp",
+            ProtocolInner::ConnectSnap => "connect-snap",
         }
     }
 }
@@ -28,6 +31,7 @@ impl Protocol {
 enum ProtocolInner {
     WebTransport,
     ConnectUdp,
+    ConnectSnap,
 }
 
 /// Error when parsing the protocol
@@ -40,6 +44,7 @@ impl FromStr for Protocol {
         match s {
             "webtransport" => Ok(Self(ProtocolInner::WebTransport)),
             "connect-udp" => Ok(Self(ProtocolInner::ConnectUdp)),
+            "connect-snap" => Ok(Self(ProtocolInner::ConnectSnap)),
             _ => Err(InvalidProtocol),
         }
     }
