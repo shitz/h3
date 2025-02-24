@@ -7,7 +7,7 @@ use h3::{
     Error,
 };
 
-use crate::server::ReadDatagram;
+use crate::datagram::ReadDatagram;
 
 pub trait HandleDatagramsExt<C, B>
 where

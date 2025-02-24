@@ -1,11 +1,6 @@
-//! server API
-
-use std::marker::PhantomData;
-
-use bytes::Buf;
 use h3::{
+    client::Connection,
     quic::{self, StreamId},
-    server::Connection,
     Error,
 };
 
@@ -17,7 +12,7 @@ use crate::{
 
 impl<B, C> HandleDatagramsExt<C, B> for Connection<C, B>
 where
-    B: Buf,
+    B: bytes::Buf,
     C: quic::Connection<B> + SendDatagramExt<B> + RecvDatagramExt,
     <C as quic_traits::RecvDatagramExt>::Error: h3::quic::Error + 'static,
     <C as quic_traits::SendDatagramExt<B>>::Error: h3::quic::Error + 'static,
@@ -34,7 +29,7 @@ where
     fn read_datagram(&mut self) -> ReadDatagram<C, B> {
         ReadDatagram {
             conn: &mut self.inner,
-            _marker: PhantomData,
+            _marker: std::marker::PhantomData,
         }
     }
 }

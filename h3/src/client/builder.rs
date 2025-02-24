@@ -91,8 +91,22 @@ impl Builder {
     /// to prevent potential interoperability issues in the future.
     /// In HTTP/3, the concept of grease is used to ensure that the protocol can evolve
     /// and accommodate future changes without breaking existing implementations.
-    pub fn send_grease(&mut self, enabled: bool) -> &mut Self {
-        self.config.send_grease = enabled;
+    pub fn send_grease(&mut self, value: bool) -> &mut Self {
+        self.config.send_grease = value;
+        self
+    }
+
+    /// Indicates that the client or server supports HTTP/3 datagrams
+    ///
+    /// See: <https://www.rfc-editor.org/rfc/rfc9297#section-2.1.1>
+    pub fn enable_datagram(&mut self, value: bool) -> &mut Self {
+        self.config.settings.enable_datagram = value;
+        self
+    }
+
+    /// Enables the CONNECT protocol
+    pub fn enable_connect(&mut self, value: bool) -> &mut Self {
+        self.config.settings.enable_extended_connect = value;
         self
     }
 
