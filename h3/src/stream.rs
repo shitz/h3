@@ -688,9 +688,29 @@ where
 
 #[cfg(test)]
 mod tests {
-    use quinn_proto::coding::BufExt;
+    use quinn_proto::coding::{Codec, UnexpectedEnd};
 
     use super::*;
+
+    /// Coding result type
+    pub type Result<T> = ::std::result::Result<T, UnexpectedEnd>;
+
+    pub(crate) trait BufExt {
+        fn get<T: Codec>(&mut self) -> Result<T>;
+        fn get_var(&mut self) -> Result<u64>;
+    }
+
+    impl<T: Buf> BufExt for T {
+        fn get<U: Codec>(&mut self) -> Result<U> {
+            U::decode(self)
+        }
+
+        fn get_var(&mut self) -> Result<u64> {
+            Ok(VarInt::decode(self)
+                .map_err(|_| UnexpectedEnd)?
+                .into_inner())
+        }
+    }
 
     #[test]
     fn write_wt_uni_header() {
